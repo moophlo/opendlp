@@ -1,17 +1,42 @@
+x-db-user: &db-user "opendlp_user"
+x-db-pass: &db-pass "opendlp_pass"
+
 services:
-  mysql:
+  opendlpdb:
     image: mysql:5.7
-    container_name: mysql57
-    restart: unless-stopped
+    container_name: opendlpdb
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root_password
       MYSQL_DATABASE: OpenDLP
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpassword
-    ports:
-      - "3306:3306"
+      MYSQL_USER: *db-user
+      MYSQL_PASSWORD: *db-pass
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  opendlp:
+    image: moophlo/opendlp:latest
+    container_name: opendlp
+    restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      OPENDLP_DB_USER: *db-user
+      OPENDLP_DB_PASS: *db-pass
+      DB_HOST: mysql
+      DB_PORT: 3306
+    volumes:
+      - opendlp_ssl:/etc/ssl/opendlp
+      - opendlp_www:/var/www/localhost/OpenDLP
+    links:
+      - opendlpdb
+
   ms:
     stdin_open: true
     tty: true
@@ -20,13 +45,14 @@ services:
     volumes:
       - /root/opendlp/OpenDLP/metasploit_modules/opendlp.rb:/usr/src/metasploit-framework/modules/post/windows/gather/opendlp.rb
     environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/msf
+      DATABASE_URL: postgres://postgres:postgres@msdb:5432/msf
     links:
-      - db
+      - msdb
     ports:
       - 4444:4444
       - 55553:55553
-  db:
+
+  msdb:
     container_name: postgres
     image: postgres:11-alpine
     environment:
@@ -39,4 +65,6 @@ volumes:
   mysql-data:
   pg_data:
     driver: local
+  opendlp_ssl:
+  opendlp_www:
 

@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- Updated `docker-compose.yml` to define database credentials (username and password) using YAML anchors. Both MySQL and OpenDLP now source the credentials from the same values, ensuring consistency and avoiding potential mismatches.
+
+### Added
+- Created a `docker-compose.yml` file that defines two services:
+  - **MySQL 5.7**: Configured with persistent storage (`mysql_data`), a healthcheck, and environment variables for the database, user, and password.
+  - **OpenDLP**: Configured to wait until MySQL is healthy (using `depends_on` with `condition: service_healthy`), with matching environment variables for `OPENDLP_DB_USER` and `OPENDLP_DB_PASS`, and persistent volumes (`opendlp_ssl` and `opendlp_www`) for its configuration and data.
+
+
 ### Fixed
 - Updated the image test stage to override the container's entrypoint (using `--entrypoint echo`) so that it outputs "Hello from OpenDLP!" without performing the full startup process (which includes database initialization). This prevents the test from failing when no database is available.
 
