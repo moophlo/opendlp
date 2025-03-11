@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+- Updated the `docker/login-action` step to source the Docker Hub username from GitHub variables (`vars.DOCKERHUB_USERNAME`) instead of secrets, ensuring that both username and password are provided correctly.
+
+### Fixed
 - Added the missing closing `fi` in the GitHub Actions `Set up Docker tags` step to fix a syntax error (unexpected end of file).
 
 ### Fixed
