@@ -24,6 +24,7 @@ jobs:
         if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
           VERSION_TAG=${GITHUB_REF#refs/tags/}
           echo "version_tag=$VERSION_TAG" >> "$GITHUB_OUTPUT"
+        fi
 
     - name: Set up QEMU (for multi-arch builds)
       uses: docker/setup-qemu-action@v3
