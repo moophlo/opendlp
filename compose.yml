@@ -1,0 +1,42 @@
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql57
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: OpenDLP
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+  ms:
+    stdin_open: true
+    tty: true
+    container_name: metasploit
+    image: metasploitframework/metasploit-framework:latest
+    volumes:
+      - /root/opendlp/OpenDLP/metasploit_modules/opendlp.rb:/usr/src/metasploit-framework/modules/post/windows/gather/opendlp.rb
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/msf
+    links:
+      - db
+    ports:
+      - 4444:4444
+      - 55553:55553
+  db:
+    container_name: postgres
+    image: postgres:11-alpine
+    environment:
+      POSTGRES_DB: msf
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+volumes:
+  mysql-data:
+  pg_data:
+    driver: local
+

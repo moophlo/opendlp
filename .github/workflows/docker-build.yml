@@ -1,0 +1,61 @@
+name: Build, Test and Push Docker Image (Tagged & Multi-Arch)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker tags
+      id: docker_tag
+      run: |
+        SHA_SHORT=$(echo "${GITHUB_SHA}" | cut -c1-7)
+        echo "sha_tag=$SHA_SHORT" >> "$GITHUB_OUTPUT"
+        BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        echo "build_date=$BUILD_DATE" >> "$GITHUB_OUTPUT"
+        if [[ $GITHUB_REF == refs/tags/v* ]]; then
+          VERSION_TAG=${GITHUB_REF#refs/tags/}
+          echo "version_tag=$VERSION_TAG" >> "$GITHUB_OUTPUT"
+
+    - name: Set up QEMU (for multi-arch builds)
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build image (test-only stage)
+      run: |
+        docker build -t moophlo/opendlp:test           --build-arg BUILD_DATE="${{ steps.docker_tag.outputs.build_date }}"           --build-arg VERSION="${{ steps.docker_tag.outputs.version_tag || steps.docker_tag.outputs.sha_tag }}"           --build-arg VCS_REF="${{ steps.docker_tag.outputs.sha_tag }}" .
+
+    - name: Run image test
+      run: |
+        docker run --rm moophlo/opendlp:test | grep "Hello from OpenDLP"
+
+    - name: Build and push multi-arch image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: |
+          moophlo/opendlp:latest
+          moophlo/opendlp:${{ steps.docker_tag.outputs.sha_tag }}
+          ${{ steps.docker_tag.outputs.version_tag && format('moophlo/opendlp:{0}', steps.docker_tag.outputs.version_tag) || '' }}
+        build-args: |
+          BUILD_DATE=${{ steps.docker_tag.outputs.build_date }}
+          VERSION=${{ steps.docker_tag.outputs.version_tag || steps.docker_tag.outputs.sha_tag }}
+          VCS_REF=${{ steps.docker_tag.outputs.sha_tag }}
