@@ -44,7 +44,7 @@ jobs:
 
     - name: Run image test
       run: |
-        docker run --rm moophlo/opendlp:test | grep "Hello from OpenDLP"
+        docker run --rm --entrypoint echo moophlo/opendlp:test "Hello from OpenDLP!" | grep "Hello from OpenDLP"
 
     - name: Build and push multi-arch image
       uses: docker/build-push-action@v5
