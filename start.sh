@@ -88,7 +88,6 @@ generate_certificates() {
   # --- Sign the server CSR using the CA ---
   cd "$CA_DIR"
   # Ensure the serial file is set appropriately (adjust as needed)
-  echo 1000 > demoCA/serial
   openssl ca -batch -config "$OPENSSL_CONFIG" -in "$CERT_DIR/server.csr" \
     -cert demoCA/cacert.pem -keyfile demoCA/private/cakey.pem \
     -out "$CERT_DIR/server.crt" -days 1825
@@ -105,7 +104,6 @@ generate_certificates() {
   # Sign the client certificate request using the server certificate as the CA.
   # The -batch flag prevents interactive prompts.
   cd "$CA_DIR"
-  echo 1000 > demoCA/serial
   openssl ca -batch -config "$OPENSSL_CONFIG" -in "$CERT_DIR/client.csr" \
     -cert "$CERT_DIR/server.crt" -keyfile "$CERT_DIR/server.key" \
     -out "$CERT_DIR/client.crt" -days 9999
