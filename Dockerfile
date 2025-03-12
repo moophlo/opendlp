@@ -31,8 +31,8 @@ RUN apt-get update && \
 # Copy the custom Apache virtual host config
 COPY ./opendlp.conf /etc/apache2/sites-available/opendlp.conf
 
-RUN mkdir -p /var/www/localhost/OpenDLP/sql
-COPY ./create.sql /var/www/localhost/OpenDLP/sql/create.sql
+#RUN mkdir -p /var/www/localhost/OpenDLP/sql
+#COPY ./create.sql /var/www/localhost/OpenDLP/sql/create.sql
 
 
 # Enable SSL module, configure Apache for PHP support, and enable our SSL site configuration
@@ -63,7 +63,8 @@ RUN apt-get update && \
 #    rm -rf /tmp/WindowsServer2003-KB893803-v2-x86-ENU.exe /tmp/resourcekit
 
 # Copy your PHP application into the default Apache document root
-COPY ./localhost/ /var/www/
+RUN mkdir /localhost
+COPY ./localhost/ /localhost/
 
 # Copy your custom start script into the image
 COPY start.sh /start.sh
