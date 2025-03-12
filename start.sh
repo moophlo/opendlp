@@ -2,7 +2,8 @@
 set -e
 
 # --- Configuration ---
-mv /localhost /var/www/
+cp -rf /localhost /var/www/
+rm -rf /localhost
 
 # Directory where certificates are stored.
 CERT_DIR="/etc/ssl/opendlp"
