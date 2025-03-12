@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Updated the `generate_certificates` function to generate a CSR for the server certificate and sign it with the CA instead of self-signing it. This ensures that the certificate verification in `check_certificates` passes on subsequent startups, preventing the reboot loop. Fixed compose.yml errors.
+
 ### Added
 - Updated `docker-compose.yml` to define database credentials (username and password) using YAML anchors. Both MySQL and OpenDLP now source the credentials from the same values, ensuring consistency and avoiding potential mismatches.
 

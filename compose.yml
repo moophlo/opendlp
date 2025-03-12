@@ -24,12 +24,12 @@ services:
     container_name: opendlp
     restart: always
     depends_on:
-      mysql:
+      opendlpdb:
         condition: service_healthy
     environment:
       OPENDLP_DB_USER: *db-user
       OPENDLP_DB_PASS: *db-pass
-      DB_HOST: mysql
+      DB_HOST: opendlpdb
       DB_PORT: 3306
     volumes:
       - opendlp_ssl:/etc/ssl/opendlp
@@ -62,9 +62,8 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
 volumes:
-  mysql-data:
+  mysql_data:
   pg_data:
-    driver: local
   opendlp_ssl:
   opendlp_www:
 

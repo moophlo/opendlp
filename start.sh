@@ -76,9 +76,17 @@ generate_certificates() {
   openssl genrsa -aes256 -passout "pass:$CERT_PASS" -out "$CERT_DIR/server.key" 4096
   openssl rsa -in "$CERT_DIR/server.key" -passin "pass:$CERT_PASS" -out "$CERT_DIR/server.key"
 
-  # Generate a self-signed server certificate (acting as our CA).
-  openssl req -new -key "$CERT_DIR/server.key" -x509 -out "$CERT_DIR/server.crt" \
-    -days 1825 -sha256 -subj "$SERVER_SUBJ"
+  # --- Create a CSR for the server certificate ---
+  openssl req -new -key "$CERT_DIR/server.key" -out "$CERT_DIR/server.csr" -subj "$SERVER_SUBJ"
+
+  # --- Sign the server CSR using the CA ---
+  cd "$CA_DIR"
+  # Ensure the serial file is set appropriately (adjust as needed)
+  echo 1000 > demoCA/serial
+  openssl ca -batch -config "$OPENSSL_CONFIG" -in "$CERT_DIR/server.csr" \
+    -cert demoCA/cacert.pem -keyfile demoCA/private/cakey.pem \
+    -out "$CERT_DIR/server.crt" -days 1825
+  cd "$CERT_DIR"
 
   # Generate client key with a passphrase, then remove the passphrase.
   openssl genrsa -aes256 -passout "pass:$CERT_PASS" -out "$CERT_DIR/client.key" 4096
