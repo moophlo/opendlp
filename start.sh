@@ -20,6 +20,16 @@ CERT_PASS="${APACHE_CERT_PASS:-password}"
 # Path to the OpenSSL configuration file (if needed)
 OPENSSL_CONFIG="${OPENSSL_CONFIG:-/etc/ssl/openssl.cnf}"
 
+# Extract the database credentials from environment variables.
+# Default values are "OpenDLP" for username and "password" for password if not set.
+DB_USER="${OPENDLP_DB_USER:-OpenDLP}"
+DB_PASS="${OPENDLP_DB_PASS:-password}"
+
+# Database connection parameters (defaults can be overridden by environment)
+DB_HOST="${DB_HOST:-127.0.0.1}"
+DB_PORT="${DB_PORT:-3306}"
+DB_NAME="${DB_NAME:-OpenDLP}"
+
 # --- CA Management Functions ---
 
 check_ca() {
@@ -145,15 +155,11 @@ else
 fi
 
 mkdir -p /var/www/localhost/OpenDLP/bin/
-cp server.pem /var/www/localhost/OpenDLP/bin/server.pem
-cp client.pem /var/www/localhost/OpenDLP/bin/client.pem
+cp ${CERT_DIR}/server.pem /var/www/localhost/OpenDLP/bin/server.pem
+cp ${CERT_DIR}/client.pem /var/www/localhost/OpenDLP/bin/client.pem
 
 # --- Set Up Database Credentials File ---
 
-# Extract the database credentials from environment variables.
-# Default values are "OpenDLP" for username and "password" for password if not set.
-DB_USER="${OPENDLP_DB_USER:-OpenDLP}"
-DB_PASS="${OPENDLP_DB_PASS:-password}"
 
 # Ensure the target directory exists.
 mkdir -p /var/www/localhost/OpenDLP/etc
@@ -164,10 +170,6 @@ echo "Database credentials written to /var/www/localhost/OpenDLP/etc/db_admin"
 
 # --- Database Check and Initialization ---
 
-# Database connection parameters (defaults can be overridden by environment)
-DB_HOST="${DB_HOST:-127.0.0.1}"
-DB_PORT="${DB_PORT:-3306}"
-DB_NAME="${DB_NAME:-OpenDLP}"
 
 echo "Checking database '$DB_NAME' on ${DB_HOST}:${DB_PORT}..."
 
@@ -210,4 +212,3 @@ else
   # Otherwise, run the default Apache startup command.
   exec apache2-foreground
 fi
-
