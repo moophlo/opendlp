@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- non-interactive CA generation script replicating demoCA structure
+  - Introduce a shell script to generate the CA key and self-signed certificate non-interactively.
+  - Replicate the traditional demoCA directory schema (private, newcerts, index.txt, and serial file) as expected by /etc/ssl/openssl.cnf and existing commands.
+  - Generate the CA private key (with optional passphrase removal) and CA certificate (valid for 10 years) to ensure compatibility with start.sh.
+  - This change enables automated CA setup in Docker environments without requiring interactive input.
+
 ### Fixed
 - Updated the `generate_certificates` function to generate a CSR for the server certificate and sign it with the CA instead of self-signing it. This ensures that the certificate verification in `check_certificates` passes on subsequent startups, preventing the reboot loop. Fixed compose.yml errors.
 

@@ -10,10 +10,11 @@ mkdir -p "$CERT_DIR"
 # Directory for the CA (kept separate)
 CA_DIR="$CERT_DIR/ca"
 mkdir -p "$CA_DIR"
+CA_SUBJ="${CA_SUBJ:-/C=US/ST=State/L=City/O=MyOrg/OU=IT/CN=opendlp-ca}"
 
 # Certificate details can be set via environment variables.
-SERVER_SUBJ="${APACHE_SSL_SUBJ:-/C=US/ST=State/L=City/O=MyOrg/OU=IT/CN=example.com}"
-CLIENT_SUBJ="${APACHE_CLIENT_SUBJ:-/C=US/ST=State/L=City/O=MyOrg/OU=Clients/CN=client1}"
+SERVER_SUBJ="${APACHE_SSL_SUBJ:-/C=US/ST=State/L=City/O=MyOrg/OU=IT/CN=localhost}"
+CLIENT_SUBJ="${APACHE_CLIENT_SUBJ:-/C=US/ST=State/L=City/O=MyOrg/OU=Clients/CN=client}"
 CERT_PASS="${APACHE_CERT_PASS:-password}"
 
 # Path to the OpenSSL configuration file (if needed)
@@ -37,17 +38,22 @@ check_ca() {
 
 generate_ca() {
   echo "Generating CA..."
+  # Create the directory structure expected by CA.pl
+  mkdir -p "${CA_DIR}/demoCA/private" "${CA_DIR}/demoCA/newcerts"
+
   # Change to CA directory for CA.pl
   cd "$CA_DIR"
-  # Create the directory structure expected by CA.pl
-  #mkdir -p demoCA/newcerts demoCA/private
-  #touch demoCA/index.txt
-  #echo 1000 > demoCA/serial
 
   # Run CA.pl in non-interactive mode.
   # Note: CA.pl is designed for interactive use.
-  echo "y" | /usr/lib/ssl/misc/CA.pl -newca -create_serial -config "$OPENSSL_CONFIG"
-  cd - >/dev/null
+  openssl genrsa -aes256 -passout pass:${CERT_PASS} -out "${CA_DIR}/demoCA/private/cakey.pem" 4096
+  openssl rsa -in "${CA_DIR}/demoCA/private/cakey.pem" -passin pass:${CERT_PASS} -out "${CA_DIR}/demoCA/private/cakey.pem"
+
+  # Generate a self-signed CA certificate (valid for 10 years)
+  openssl req -new -x509 -days 3650 -key "${CA_DIR}/demoCA/private/cakey.pem" -out "${CA_DIR}/demoCA/cacert.pem" -subj "${CA_SUBJ}"
+  echo 1000 > demoCA/serial
+  touch demoCA/index.txt
+  cd "$CERT_DIR"
   echo "CA generation complete. CA certificate at $CA_DIR/demoCA/cacert.pem"
 }
 
