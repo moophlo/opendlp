@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Extracted the base image tag from the Dockerfile’s FROM line and added it as an additional image tag during the push. This allows tracking of the underlying base image version used in the build.
+
+### Added
+- Updated the GitHub Actions workflow to derive the Docker image name dynamically from the GitHub repository name (using `${{ github.repository }}`), ensuring the image is tagged as `githubuser/repositoryname`.
+- Modified the trigger so that the workflow runs only when the `Dockerfile` changes (using the `paths` filter) and on version tag pushes.
+- Maintained existing tags for latest, commit SHA, semantic version (if applicable), and the base image tag from the Dockerfile.
+
+### Added
+- Modified the GitHub Actions workflow to convert the derived image name from `${{ github.repository }}` to all lowercase (using `tr`), ensuring that the Docker image name is always in lowercase.
+
+### Added
 - non-interactive CA generation script replicating demoCA structure
   - Introduce a shell script to generate the CA key and self-signed certificate non-interactively.
   - Replicate the traditional demoCA directory schema (private, newcerts, index.txt, and serial file) as expected by /etc/ssl/openssl.cnf and existing commands.

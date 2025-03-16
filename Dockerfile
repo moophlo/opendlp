@@ -1,7 +1,6 @@
 # Use an official PHP image with Apache
 FROM ubuntu/apache2
 
-
 LABEL maintainer="moophlo"
 LABEL org.opencontainers.image.title="opendlp"
 LABEL org.opencontainers.image.description="OpenDLP container image built automatically via GitHub Actions"
@@ -22,18 +21,11 @@ RUN apt-get update && \
     apt-get install -y vim tdsodbc perl unzip openssl sshfs curl ca-certificates p7zip-full mysql-client && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy SSL certificate and key
-#COPY server.crt /etc/ssl/opendlp/server.crt
-#COPY server.key /etc/ssl/opendlp/server.key
-#COPY server.pem /var/www/localhost/OpenDLP/bin/server.pem
-#COPY client.pem /var/www/localhost/OpenDLP/bin/client.pem
-
 # Copy the custom Apache virtual host config
 COPY ./opendlp.conf /etc/apache2/sites-available/opendlp.conf
 
 #RUN mkdir -p /var/www/localhost/OpenDLP/sql
 #COPY ./create.sql /var/www/localhost/OpenDLP/sql/create.sql
-
 
 # Enable SSL module, configure Apache for PHP support, and enable our SSL site configuration
 RUN a2enmod ssl && \
@@ -51,24 +43,13 @@ RUN apt-get update && \
     apt-get install -y p7zip-full && \
     rm -rf /var/lib/apt/lists/*
 
-# Download the Windows Server 2003 Resource Kit Tools installer.
-#RUN curl -L -o /tmp/WindowsServer2003-KB893803-v2-x86-ENU.exe "https://download.microsoft.com/download/9/7/A/97AD74B7-DF1E-4F73-A1D2-0A1E847EF5F3/WindowsServer2003-KB893803-v2-x86-ENU.exe"
-
-# Extract the installer and copy sc.exe to /usr/local/bin (or any desired location).
-#RUN 7z x /tmp/WindowsServer2003-KB893803-v2-x86-ENU.exe -o/tmp/resourcekit && \
-#    # Locate sc.exe in the extracted folder. (Adjust the search path if needed.)
-#    find /tmp/resourcekit -iname "sc.exe" -exec cp {} /var/www/localhost/OpenDLP/bin/sc.exe \; && \
-#    chmod +x /var/www/localhost/OpenDLP/bin/sc.exe && \
-#    # Clean up temporary files
-#    rm -rf /tmp/WindowsServer2003-KB893803-v2-x86-ENU.exe /tmp/resourcekit
-
 # Copy your PHP application into the default Apache document root
 RUN mkdir /localhost
 COPY ./localhost/ /localhost/
 
 # Copy your custom start script into the image
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+COPY run.sh /run.sh
+RUN chmod +x /run.sh
 
-# Override the default command/entrypoint to use your start.sh
-CMD ["/start.sh"]
+# Override the default command/entrypoint to use your run.sh
+CMD ["/run.sh"]

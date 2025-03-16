@@ -23,6 +23,8 @@ services:
     image: moophlo/opendlp:latest
     container_name: opendlp
     restart: always
+    ports:
+      - "443:443"
     depends_on:
       opendlpdb:
         condition: service_healthy
