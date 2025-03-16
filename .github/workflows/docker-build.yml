@@ -30,7 +30,12 @@ jobs:
           VERSION_TAG="${GITHUB_REF#refs/tags/}"
           echo "version_tag=$VERSION_TAG" >> "$GITHUB_OUTPUT"
         fi
-        BASE_TAG=$(grep -m1 -E '^FROM ' Dockerfile | sed -E 's/FROM\s+[^:]+:(.*)/\1/')
+        FROM_LINE=$(grep -m1 -E '^FROM ' Dockerfile)
+        if [[ "$FROM_LINE" == *":"* ]]; then
+          BASE_TAG=$(echo "$FROM_LINE" | sed -E 's/FROM\s+[^:]+:(.*)/\1/')
+        else
+          BASE_TAG="latest"
+        fi
         echo "base_tag=$BASE_TAG" >> "$GITHUB_OUTPUT"
 
     - name: Set up QEMU (for multi-arch builds)

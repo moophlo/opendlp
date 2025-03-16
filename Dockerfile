@@ -11,7 +11,6 @@ ARG BUILD_DATE
 ARG VERSION
 ARG VCS_REF
 
-
 LABEL org.opencontainers.image.created=$BUILD_DATE
 LABEL org.opencontainers.image.version=$VERSION
 LABEL org.opencontainers.image.revision=$VCS_REF

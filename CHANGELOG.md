@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Fixed
+- Updated the "Set up Docker tags" step in the GitHub Actions workflow to check if the FROM line in the Dockerfile contains a colon. If no tag is specified, it defaults the base_tag to "latest". This prevents an invalid image tag format (e.g., "moophlo/opendlp:FROM ubuntu/apache2") and resolves the build error.
+
+### Fixed
 - Modified the test stage in the GitHub Actions workflow to use `docker buildx build --load`, ensuring that the built test image is loaded into the local Docker engine. This resolves the issue where the test image wasn't found due to the build result remaining in the build cache.
 
 ### Added
