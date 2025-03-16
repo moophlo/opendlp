@@ -203,6 +203,32 @@ if [ "$DB_HOST" != "127.0.0.1" ]; then
   echo "Configuration files updated."
 fi
 
+# Determine which htpasswd command to use.
+if command -v htpasswd &>/dev/null; then
+  HTPASSWD_CMD=htpasswd
+elif command -v htpasswd2 &>/dev/null; then
+  HTPASSWD_CMD=htpasswd2
+else
+  echo "Error: Neither 'htpasswd' nor 'htpasswd2' is installed."
+  exit 1
+fi
+
+# Use default credentials if environment variables are not set.
+DLP_USER=${DLP_USER:-default_web_user}
+DLP_PASS=${DLP_PASS:-default_web_pass}
+DLP_AGENT_USER=${DLP_AGENT_USER:-default_agent_user}
+DLP_AGENT_PASS=${DLP_AGENT_PASS:-default_agent_pass}
+
+# Define the target files.
+HTPASSWD_USER_FILE="/etc/apache2/.htpasswd.dlp.user"
+HTPASSWD_AGENT_FILE="/etc/apache2/.htpasswd.dlp.agent"
+
+# Create or update the .htpasswd files using batch mode (-b) and create new file (-c).
+$HTPASSWD_CMD -cb "$HTPASSWD_USER_FILE" "$DLP_USER" "$DLP_PASS"
+$HTPASSWD_CMD -cb "$HTPASSWD_AGENT_FILE" "$DLP_AGENT_USER" "$DLP_AGENT_PASS"
+
+echo "Created $HTPASSWD_USER_FILE and $HTPASSWD_AGENT_FILE successfully."
+
 # --- Start Apache or Override with Command-Line Arguments ---
 
 echo "Starting Apache..."

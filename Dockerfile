@@ -1,6 +1,7 @@
 # Use an official PHP image with Apache
 FROM ubuntu/apache2
 
+
 LABEL maintainer="moophlo"
 LABEL org.opencontainers.image.title="opendlp"
 LABEL org.opencontainers.image.description="OpenDLP container image built automatically via GitHub Actions"
