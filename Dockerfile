@@ -24,9 +24,6 @@ RUN apt-get update && \
 # Copy the custom Apache virtual host config
 COPY ./opendlp.conf /etc/apache2/sites-available/opendlp.conf
 
-#RUN mkdir -p /var/www/localhost/OpenDLP/sql
-#COPY ./create.sql /var/www/localhost/OpenDLP/sql/create.sql
-
 # Enable SSL module, configure Apache for PHP support, and enable our SSL site configuration
 RUN a2enmod ssl && \
     a2enmod socache_shmcb && \
