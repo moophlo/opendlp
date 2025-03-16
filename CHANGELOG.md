@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+- Modified the test stage in the GitHub Actions workflow to use `docker buildx build --load`, ensuring that the built test image is loaded into the local Docker engine. This resolves the issue where the test image wasn't found due to the build result remaining in the build cache.
+
 ### Added
 - Extracted the base image tag from the Dockerfile’s FROM line and added it as an additional image tag during the push. This allows tracking of the underlying base image version used in the build.
 

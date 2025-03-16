@@ -49,7 +49,7 @@ jobs:
 
     - name: Build image (test-only stage)
       run: |
-        docker buildx build -t ${{ steps.docker_tag.outputs.image_name }}:test \
+        docker buildx build --load -t ${{ steps.docker_tag.outputs.image_name }}:test \
           --build-arg BUILD_DATE="${{ steps.docker_tag.outputs.build_date }}" \
           --build-arg VERSION="${{ steps.docker_tag.outputs.version_tag || steps.docker_tag.outputs.sha_tag }}" \
           --build-arg VCS_REF="${{ steps.docker_tag.outputs.sha_tag }}" .
