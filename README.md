@@ -68,8 +68,14 @@ See the original [LICENSE](https://github.com/ezarko/opendlp/blob/main/LICENSE) 
 
 ## ✅ Example Usage
 
+If you're using your own database
+
 ```bash
 docker run -e OPENDLP_DB_USER=admin -e OPENDLP_DB_PASS=secret \
            -e DB_HOST=10.10.10.10 \
            moophlo/opendlp:latest
+```
 
+If you want the database to be created automatically
+```bash
+docker compose up -d
