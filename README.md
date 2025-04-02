@@ -99,5 +99,5 @@ docker compose cp opendlp:/etc/ssl/opendlp/ca/demoCA/cacert.pem cacert.pem
 The CA Certificates need to be imported in the trusted CA Certificates in your browser.
 The Client Certificate need to be imported in the "Your Certificates" section in the browser
 
-On the first connection to: https://localhost//OpenDLP/ when requested just select the Client Certificate
+On the first connection to: https://localhost/OpenDLP/ when requested just select the Client Certificate
 

@@ -2,7 +2,7 @@
 set -e
 
 # --- Configuration ---
-if [[ ! -d /var/www/localhost ]];then
+if [[ -d /localhost ]];then
   cp -rf /localhost /var/www/
   rm -rf /localhost
 fi
