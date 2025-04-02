@@ -1,4 +1,4 @@
-# Use an official PHP image with Apache
+# Use an official image with Apache
 FROM ubuntu/apache2
 
 LABEL maintainer="moophlo"
@@ -18,7 +18,7 @@ LABEL org.opencontainers.image.revision=$VCS_REF
 # Install Vim (optional)
 RUN apt-get update && \
     apt full-upgrade -y && \
-    apt-get install -y vim tdsodbc perl unzip openssl sshfs curl ca-certificates p7zip-full mysql-client libcgi-pm-perl && \
+    apt-get install -y vim tdsodbc perl unzip openssl sshfs curl ca-certificates p7zip-full mysql-client libcgi-pm-perl build-essential libmysqlclient-dev freetds-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy the custom Apache virtual host config
@@ -35,12 +35,7 @@ RUN a2enmod ssl && \
 ENV PERL_MM_USE_DEFAULT=1
 RUN perl -MCPAN -e 'CPAN::Shell->install(qw(CGI DBI Filesys::SmbClient Proc::Queue XML::Writer MIME::Base64 DBD::Sybase Algorithm::LUHN Time::HiRes Digest::MD5 File::Path Archive::Extract Archive::Zip Data::MessagePack ExtUtils::MakeMaker ExtUtils::ParseXS DBD::mysql))'
 
-# Install p7zip-full for extracting the Resource Kit Tools installer.
-RUN apt-get update && \
-    apt-get install -y p7zip-full && \
-    rm -rf /var/lib/apt/lists/*
-
-# Copy your PHP application into the default Apache document root
+# Copy your application into the default Apache document root
 RUN mkdir /localhost
 COPY ./localhost/ /localhost/
 
