@@ -46,6 +46,15 @@ The container supports several environment variables for customization at runtim
 
 > The container automatically checks the database on startup, creates it if missing, and initializes the schema if empty using `create.sql`.
 
+### 🗄 User Configuration
+
+| Variable | Description | Default |
+|---------|-------------|---------|
+|`DLP_USER`|Username|`default_web_user`|
+|`DLP_PASS`|Username password|`default_web_pass`|
+|`DLP_AGENT_USER`|DLP Agent Username|`default_agent_user`|
+|`DLP_AGENT_PASS`|DLP Agent password|`default_agent_pass` |
+
 ### 🧩 Configuration File Auto-Update
 
 If `DB_HOST` is not the default (`127.0.0.1`), the container will update OpenDLP configuration files to point to the provided host automatically.

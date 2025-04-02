@@ -33,6 +33,12 @@ DB_HOST="${DB_HOST:-127.0.0.1}"
 DB_PORT="${DB_PORT:-3306}"
 DB_NAME="${DB_NAME:-OpenDLP}"
 
+# Use default credentials if environment variables are not set.
+DLP_USER=${DLP_USER:-default_web_user}
+DLP_PASS=${DLP_PASS:-default_web_pass}
+DLP_AGENT_USER=${DLP_AGENT_USER:-default_agent_user}
+DLP_AGENT_PASS=${DLP_AGENT_PASS:-default_agent_pass}
+
 # --- CA Management Functions ---
 
 check_ca() {
@@ -214,12 +220,6 @@ else
   echo "Error: Neither 'htpasswd' nor 'htpasswd2' is installed."
   exit 1
 fi
-
-# Use default credentials if environment variables are not set.
-DLP_USER=${DLP_USER:-default_web_user}
-DLP_PASS=${DLP_PASS:-default_web_pass}
-DLP_AGENT_USER=${DLP_AGENT_USER:-default_agent_user}
-DLP_AGENT_PASS=${DLP_AGENT_PASS:-default_agent_pass}
 
 # Define the target files.
 HTPASSWD_USER_FILE="/etc/apache2/.htpasswd.dlp.user"
