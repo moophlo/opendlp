@@ -16,6 +16,7 @@ CA_SUBJ="${CA_SUBJ:-/C=US/ST=State/L=City/O=MyOrg/OU=IT/CN=opendlp-ca}"
 
 # Certificate details can be set via environment variables.
 SERVER_SUBJ="${APACHE_SSL_SUBJ:-/C=US/ST=State/L=City/O=MyOrg/OU=IT/CN=localhost}"
+SERVER_SAN="${APACHE_SSL_SAN:-subjectAltName=DNS:localhost,IP:127.0.0.1}"
 CLIENT_SUBJ="${APACHE_CLIENT_SUBJ:-/C=US/ST=State/L=City/O=MyOrg/OU=Clients/CN=client}"
 CERT_PASS="${APACHE_CERT_PASS:-password}"
 
@@ -95,13 +96,14 @@ generate_certificates() {
   openssl rsa -in "$CERT_DIR/server.key" -passin "pass:$CERT_PASS" -out "$CERT_DIR/server.key"
 
   # --- Create a CSR for the server certificate ---
-  openssl req -new -key "$CERT_DIR/server.key" -out "$CERT_DIR/server.csr" -subj "$SERVER_SUBJ"
+  openssl req -new -key "$CERT_DIR/server.key" -out "$CERT_DIR/server.csr" -subj "$SERVER_SUBJ" -addext "$SERVER_SAN"
 
   # --- Sign the server CSR using the CA ---
   cd "$CA_DIR"
   # Ensure the serial file is set appropriately (adjust as needed)
   openssl ca -batch -config "$OPENSSL_CONFIG" -in "$CERT_DIR/server.csr" \
     -cert demoCA/cacert.pem -keyfile demoCA/private/cakey.pem \
+    -extfile <(printf "$SERVER_SAN") \
     -out "$CERT_DIR/server.crt" -days 1825
   cd "$CERT_DIR"
 
@@ -117,7 +119,7 @@ generate_certificates() {
   # The -batch flag prevents interactive prompts.
   cd "$CA_DIR"
   openssl ca -batch -config "$OPENSSL_CONFIG" -in "$CERT_DIR/client.csr" \
-    -cert "$CERT_DIR/server.crt" -keyfile "$CERT_DIR/server.key" \
+    -cert demoCA/cacert.pem -keyfile demoCA/private/cakey.pem \
     -out "$CERT_DIR/client.crt" -days 9999
   cd "$CERT_DIR"
 
@@ -226,6 +228,8 @@ HTPASSWD_AGENT_FILE="/etc/apache2/.htpasswd.dlp.agent"
 # Create or update the .htpasswd files using batch mode (-b) and create new file (-c).
 $HTPASSWD_CMD -cb "$HTPASSWD_USER_FILE" "$DLP_USER" "$DLP_PASS"
 $HTPASSWD_CMD -cb "$HTPASSWD_AGENT_FILE" "$DLP_AGENT_USER" "$DLP_AGENT_PASS"
+sed -i "s|#DLP_USER#|$DLP_USER|g" /etc/apache2/sites-enabled/opendlp.conf
+sed -i "s|#DLP_AGENT_USER#|$DLP_AGENT_USER|g" /etc/apache2/sites-enabled/opendlp.conf
 
 echo "Created $HTPASSWD_USER_FILE and $HTPASSWD_AGENT_FILE successfully."
 

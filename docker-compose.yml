@@ -68,4 +68,3 @@ volumes:
   pg_data:
   opendlp_ssl:
   opendlp_www:
-
