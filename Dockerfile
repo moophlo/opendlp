@@ -18,7 +18,7 @@ LABEL org.opencontainers.image.revision=$VCS_REF
 # Install Vim (optional)
 RUN apt-get update && \
     apt full-upgrade -y && \
-    apt-get install -y vim tdsodbc perl unzip openssl sshfs curl ca-certificates p7zip-full mysql-client libcgi-pm-perl build-essential libmysqlclient-dev freetds-dev && \
+    apt-get install -y vim tdsodbc perl unzip openssl sshfs curl ca-certificates p7zip-full mysql-client build-essential libmysqlclient-dev freetds-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy the custom Apache virtual host config
