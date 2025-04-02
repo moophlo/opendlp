@@ -2,8 +2,10 @@
 set -e
 
 # --- Configuration ---
-cp -rf /localhost /var/www/
-rm -rf /localhost
+if [[ ! -d /var/www/localhost ]];then
+  cp -rf /localhost /var/www/
+  rm -rf /localhost
+fi
 
 # Directory where certificates are stored.
 CERT_DIR="/etc/ssl/opendlp"
