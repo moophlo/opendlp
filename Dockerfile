@@ -44,9 +44,9 @@ RUN a2enmod ssl && \
     a2ensite opendlp
 
 # Install Perl modules
-#ENV PERL_MM_USE_DEFAULT=1
+ENV PERL_MM_USE_DEFAULT=1
 #RUN perl -MCPAN -e 'CPAN::Shell->install(qw(CGI DBI Filesys::SmbClient Proc::Queue XML::Writer MIME::Base64 DBD::Sybase Algorithm::LUHN Time::HiRes Digest::MD5 File::Path Archive::Extract Archive::Zip Data::MessagePack ExtUtils::MakeMaker ExtUtils::ParseXS DBD::mysql))'
-RUN perl -MCPAN -e 'install Algorithm::LUHN'
+RUN perl -MCPAN -e 'CPAN::Shell->install("Algorithm::LUHN")'
 
 # Copy your application into the default Apache document root
 RUN mkdir /localhost
