@@ -18,7 +18,24 @@ LABEL org.opencontainers.image.revision=$VCS_REF
 # Install Vim (optional)
 RUN apt-get update && \
     apt full-upgrade -y && \
-    apt-get install -y vim tdsodbc perl unzip openssl sshfs curl ca-certificates p7zip-full mysql-client libcgi-pm-perl build-essential libmysqlclient-dev freetds-dev && \
+    apt-get install -y vim tdsodbc perl unzip openssl sshfs curl ca-certificates p7zip-full mysql-client build-essential \
+    libmysqlclient-dev \
+    freetds-dev \
+    libdbd-mysql-perl \
+    libcgi-pm-perl \
+    libdbi-perl \
+    libfilesys-smbclient-perl \
+    libxml-writer-perl \
+    libmime-base64-perl \
+    libdbd-sybase-perl \
+    libalgorithm-luhn-perl \
+    libtime-hires-perl \
+    libdigest-md5-perl \
+    libarchive-extract-perl \
+    libarchive-zip-perl \
+    libdata-messagepack-perl \
+    libextutils-parsexs-perl \
+    libdbd-mysql-perl && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy the custom Apache virtual host config
@@ -32,8 +49,8 @@ RUN a2enmod ssl && \
     a2ensite opendlp
 
 # Install Perl modules
-ENV PERL_MM_USE_DEFAULT=1
-RUN perl -MCPAN -e 'CPAN::Shell->install(qw(CGI DBI Filesys::SmbClient Proc::Queue XML::Writer MIME::Base64 DBD::Sybase Algorithm::LUHN Time::HiRes Digest::MD5 File::Path Archive::Extract Archive::Zip Data::MessagePack ExtUtils::MakeMaker ExtUtils::ParseXS DBD::mysql))'
+#ENV PERL_MM_USE_DEFAULT=1
+#RUN perl -MCPAN -e 'CPAN::Shell->install(qw(CGI DBI Filesys::SmbClient Proc::Queue XML::Writer MIME::Base64 DBD::Sybase Algorithm::LUHN Time::HiRes Digest::MD5 File::Path Archive::Extract Archive::Zip Data::MessagePack ExtUtils::MakeMaker ExtUtils::ParseXS DBD::mysql))'
 
 # Copy your application into the default Apache document root
 RUN mkdir /localhost
