@@ -26,15 +26,10 @@ RUN apt-get update && \
     libdbi-perl \
     libfilesys-smbclient-perl \
     libxml-writer-perl \
-    libmime-base64-perl \
     libdbd-sybase-perl \
-    libalgorithm-luhn-perl \
-    libtime-hires-perl \
-    libdigest-md5-perl \
     libarchive-extract-perl \
     libarchive-zip-perl \
     libdata-messagepack-perl \
-    libextutils-parsexs-perl \
     libdbd-mysql-perl && \
     rm -rf /var/lib/apt/lists/*
 
@@ -51,6 +46,7 @@ RUN a2enmod ssl && \
 # Install Perl modules
 #ENV PERL_MM_USE_DEFAULT=1
 #RUN perl -MCPAN -e 'CPAN::Shell->install(qw(CGI DBI Filesys::SmbClient Proc::Queue XML::Writer MIME::Base64 DBD::Sybase Algorithm::LUHN Time::HiRes Digest::MD5 File::Path Archive::Extract Archive::Zip Data::MessagePack ExtUtils::MakeMaker ExtUtils::ParseXS DBD::mysql))'
+RUN perl -MCPAN -e 'install Algorithm::LUHN'
 
 # Copy your application into the default Apache document root
 RUN mkdir /localhost
