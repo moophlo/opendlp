@@ -50,8 +50,8 @@ RUN mkdir /localhost
 COPY ./localhost/ /localhost/
 
 # Copy your custom start script into the image
-COPY ./start.sh /start.sh
-RUN chmod +x /start.sh
+COPY ./run.sh /run.sh
+RUN chmod +x /run.sh
 
-# Override the default command/entrypoint to use your start.sh
-CMD ["/start.sh"]
+# Override the default command/entrypoint to use your run.sh
+CMD ["/run.sh"]

@@ -54,7 +54,7 @@ jobs:
 
     - name: Build image (test-only stage)
       run: |
-        docker buildx build --load -t ${{ steps.docker_tag.outputs.image_name }}:test \
+        docker buildx build --no-cache --load -t ${{ steps.docker_tag.outputs.image_name }}:test \
           --build-arg BUILD_DATE="${{ steps.docker_tag.outputs.build_date }}" \
           --build-arg VERSION="${{ steps.docker_tag.outputs.version_tag || steps.docker_tag.outputs.sha_tag }}" \
           --build-arg VCS_REF="${{ steps.docker_tag.outputs.sha_tag }}" .
@@ -69,6 +69,7 @@ jobs:
         context: .
         platforms: linux/amd64,linux/arm64
         push: true
+        no-cache: true
         tags: |
           ${{ steps.docker_tag.outputs.image_name }}:latest
           ${{ steps.docker_tag.outputs.image_name }}:${{ steps.docker_tag.outputs.sha_tag }}
