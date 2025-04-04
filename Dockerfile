@@ -49,11 +49,6 @@ RUN a2enmod ssl && \
 RUN mkdir /localhost
 COPY ./localhost/ /localhost/
 
-
-# Copy your application into the default Apache document root
-RUN mkdir /localhost
-COPY ./localhost/ /localhost/
-
 # Copy your custom start script into the image
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
