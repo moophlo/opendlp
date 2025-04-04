@@ -45,7 +45,7 @@ services:
     container_name: metasploit
     image: metasploitframework/metasploit-framework:latest
     volumes:
-      - /root/opendlp/OpenDLP/metasploit_modules/opendlp.rb:/usr/src/metasploit-framework/modules/post/windows/gather/opendlp.rb
+      - ./localhost/OpenDLP/metasploit_modules/opendlp.rb:/usr/src/metasploit-framework/modules/post/windows/gather/opendlp.rb
     environment:
       DATABASE_URL: postgres://postgres:postgres@msdb:5432/msf
     links:
