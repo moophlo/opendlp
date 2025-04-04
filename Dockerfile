@@ -50,6 +50,7 @@ ENV PERL_MM_USE_DEFAULT=1
 #RUN perl -MCPAN -e 'CPAN::Shell->install(qw(CGI DBI Filesys::SmbClient Proc::Queue XML::Writer MIME::Base64 DBD::Sybase Algorithm::LUHN Time::HiRes Digest::MD5 File::Path Archive::Extract Archive::Zip Data::MessagePack ExtUtils::MakeMaker ExtUtils::ParseXS DBD::mysql))'
 RUN perl -MCPAN -e 'CPAN::Shell->install("Algorithm::LUHN")' && \
     perl -MCPAN -e 'CPAN::Shell->install("CPAN::DistnameInfo")' && \
+    perl -MCPAN -e 'CPAN::Shell->install("LWP")' && \
     perl -MCPAN -e 'CPAN::Shell->install("Proc::Queue")'
 
 # Copy your application into the default Apache document root
