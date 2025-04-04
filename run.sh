@@ -7,11 +7,16 @@ if [[ -d /localhost ]];then
   rm -rf /localhost
 fi
 
+modules=("Algorithm::LUHN" "CPAN::DistnameInfo" "LWP" "Proc::Queue")
 
-perl -MCPAN -e 'CPAN::Shell->install("Algorithm::LUHN")'
-perl -MCPAN -e 'CPAN::Shell->install("CPAN::DistnameInfo")'
-perl -MCPAN -e 'CPAN::Shell->install("LWP")'
-perl -MCPAN -e 'CPAN::Shell->install("Proc::Queue")'
+for mod in "${modules[@]}"; do
+  if perl -M"${mod}" -e1 2>/dev/null; then
+    echo "$mod è già installato."
+  else
+    echo "$mod non è installato. Installazione in corso..."
+    perl -MCPAN -e "CPAN::Shell->install('${mod}')"
+  fi
+done
 
 # Directory where certificates are stored.
 CERT_DIR="/etc/ssl/opendlp"

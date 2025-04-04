@@ -53,5 +53,6 @@ COPY ./localhost/ /localhost/
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
+
 # Override the default command/entrypoint to use your run.sh
 CMD ["/run.sh"]
