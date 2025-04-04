@@ -37,6 +37,7 @@ COPY ./opendlp.conf /etc/apache2/sites-available/opendlp.conf
 COPY ./localhost/OpenDLP/perl_modules/MSFRPC.pm /usr/local/share/perl/5.38.2/MSFRPC.pm
 COPY ./localhost/OpenDLP/perl_modules/MetaPostModule.pm /usr/local/share/perl/5.38.2/MetaPostModule.pm
 COPY ./localhost/OpenDLP/perl_modules/MetaSploiter.pm /usr/local/share/perl/5.38.2/MetaSploiter.pm
+COPY ./MyConfig.pm /root/.cpan/CPAN/MyConfig.pm
 
 # Enable SSL module, configure Apache for PHP support, and enable our SSL site configuration
 RUN a2enmod ssl && \
