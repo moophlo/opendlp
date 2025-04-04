@@ -7,6 +7,12 @@ if [[ -d /localhost ]];then
   rm -rf /localhost
 fi
 
+
+perl -MCPAN -e 'CPAN::Shell->install("Algorithm::LUHN")'
+perl -MCPAN -e 'CPAN::Shell->install("CPAN::DistnameInfo")'
+perl -MCPAN -e 'CPAN::Shell->install("LWP")'
+perl -MCPAN -e 'CPAN::Shell->install("Proc::Queue")'
+
 # Directory where certificates are stored.
 CERT_DIR="/etc/ssl/opendlp"
 mkdir -p "$CERT_DIR"
